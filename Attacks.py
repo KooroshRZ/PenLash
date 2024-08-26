@@ -18,7 +18,7 @@ class Attack:
                     req.request_headers.pop('Authorization')
                     req.send()
                     print(f'{req.url} : {req.status_code} -> {req.response_headers}')
-                    sleep(1)
+                    sleep(2)
 
         elif self.name == 'AC': # ACCESS Control Check for
             pass
