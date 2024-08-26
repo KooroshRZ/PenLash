@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 from base64 import b64decode
 import re
 from HTTPRequest import HTTPRequest
+from Attacks import Attack
 
 def parse_burp_file(filename):
     tree = ET.parse(filename)
@@ -37,7 +38,7 @@ def parse_requests(requests):
         url = r[0][1]
         
         if method != 'OPTIONS':
-            req_obj = HTTPRequest(method=method, url=url, headers=headers, body=body)
+            req_obj = HTTPRequest(method=method, url=url, headers=headers, body=body, use_proxy=True)
             req_objs.append(req_obj)
         
     return req_objs
@@ -48,6 +49,5 @@ requests_2 = parse_burp_file('./requests.2.xml')
 
 
 reqs = parse_requests(requests_0)
-
-for req in reqs:
-    print(req.method)
+attack = Attack(name='IDOR', category='AUTH', mode=0, reqs=reqs)
+attack.run()
