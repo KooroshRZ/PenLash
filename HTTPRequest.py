@@ -13,7 +13,8 @@ class HTTPRequest:
         self.response_headers = None
         self.response_body = None
         self.use_proxy = use_proxy
-        self.proxies = proxies = {
+        
+        self.proxies = {
             'http': 'http://localhost:8080',
             'https': 'http://localhost:8080',
         } if use_proxy else None

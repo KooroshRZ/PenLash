@@ -22,17 +22,9 @@ def parse_requests(requests):
     req_objs = []
     for request in requests:
 
-        # request_splited = request.split(b'\r\n\r\n')
-
-        # head = request_splited[0].decode().split('\r\n')[1:]
-        # body = b''.join(request_splited[1:])
-
         sep_index = request.find(b'\r\n\r\n')
-
         head = request[:sep_index].decode()
         body = request[sep_index+4:]
-
-        # print(head)
 
         headers = {}
         for h in head.split('\r\n')[1:]:
@@ -45,16 +37,25 @@ def parse_requests(requests):
         url = r[0][1]
         
         if method != 'OPTIONS':
+            # print(f"{headers['Host']}{url}")
             req_obj = HTTPRequest(method=method, url=url, headers=headers, body=body, use_proxy=True)
             req_objs.append(req_obj)
         
+    
     return req_objs
 
-requests_0 = parse_burp_file('./requests.0.xml')
-requests_1 = parse_burp_file('./requests.1.xml')
-requests_2 = parse_burp_file('./requests.2.xml')
+requests_0 = parse_burp_file('./requests0.xml')
+requests_1 = parse_burp_file('./requests1.xml')
+requests_2 = parse_burp_file('./requests2.xml')
 
 
-reqs = parse_requests(requests_1)
-attack = Attack(name='IDOR', category='AUTH', mode=0, reqs=reqs)
+reqs0 = parse_requests(requests_0)
+reqs1 = parse_requests(requests_1)
+reqs2 = parse_requests(requests_2)
+
+
+# attack = Attack(name='IDOR', category='AUTH', mode=0, reqs0=reqs0)
+print("="*100)
+print("Accessing user3 APIs with user1 token")
+attack = Attack(name='AC', category='AUTHZ', mode=1, reqs0=reqs2, reqs1=reqs0)
 attack.run()
